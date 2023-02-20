@@ -47,14 +47,12 @@ Future getToken(
   );
 
   if (response.statusCode == 200) {
-    var map = json.decode(response.body);
+    dynamic map = json.decode(response.body);
     print(response.body);
-    var token = map["data"];
+    dynamic token = map["data"];
     print(token);
-    developer.log(token);
-    String fileNumber = token["fileNumber"];
-    print(fileNumber);
-    return fileNumber;
+
+    return token;
     // return token;
   } else {
     return false;
