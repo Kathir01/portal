@@ -1,127 +1,54 @@
+// // ignore_for_file: public_member_api_docs, sort_constructors_first
 // import 'dart:convert';
 
-// // // ignore_for_file: public_member_api_docs, sort_constructors_first
-// // import 'dart:convert';
+// class UserModel {
+//   final int id;
+//   final String token;
 
-// // class User {
-// //   final int id;
-// //   final int userId;
-// //   final String title;
-// //   final String body;
-
-// //   User({
-// //     required this.id,
-// //     required this.userId,
-// //     required this.title,
-// //     required this.body,
-// //   });
-
-// //   User copyWith({
-// //     int? id,
-// //     int? userId,
-// //     String? title,
-// //     String? body,
-// //   }) {
-// //     return User(
-// //       id: id ?? this.id,
-// //       userId: userId ?? this.userId,
-// //       title: title ?? this.title,
-// //       body: body ?? this.body,
-// //     );
-// //   }
-
-// //   Map<String, dynamic> toMap() {
-// //     return <String, dynamic>{
-// //       'id': id,
-// //       'userId': userId,
-// //       'title': title,
-// //       'body': body,
-// //     };
-// //   }
-
-// //   factory User.fromMap(Map<String, dynamic> map) {
-// //     return User(
-// //       id: map['id'] as int,
-// //       userId: map['userId'] as int,
-// //       title: map['title'] as String,
-// //       body: map['body'] as String,
-// //     );
-// //   }
-
-// //   String toJson() => json.encode(toMap());
-
-// //   factory User.fromJson(String source) =>
-// //       User.fromMap(json.decode(source) as Map<String, dynamic>);
-
-// //   @override
-// //   String toString() {
-// //     return 'User(id: $id, userId: $userId, title: $title, body: $body)';
-// //   }
-
-// //   @override
-// //   bool operator ==(covariant User other) {
-// //     if (identical(this, other)) return true;
-
-// //     return other.id == id &&
-// //         other.userId == userId &&
-// //         other.title == title &&
-// //         other.body == body;
-// //   }
-
-// //   @override
-// //   int get hashCode {
-// //     return id.hashCode ^ userId.hashCode ^ title.hashCode ^ body.hashCode;
-// //   }
-// // }
-
-// class User {
-//   final int ok;
-//   final int data;
-
-//   User({
-//     required this.ok,
-//     required this.data,
+//   UserModel({
+//     required this.id,
+//     required this.token,
 //   });
 
-//   User copyWith({
-//     int? ok,
-//     int? data,
+//   UserModel copyWith({
+//     int? id,
+//     String? token,
 //   }) {
-//     return User(
-//       ok: ok ?? this.ok,
-//       data: data ?? this.data,
+//     return UserModel(
+//       id: id ?? this.id,
+//       token: token ?? this.token,
 //     );
 //   }
 
 //   Map<String, dynamic> toMap() {
 //     return <String, dynamic>{
-//       'ok': ok,
-//       'data': data,
+//       'id': id,
+//       'token': token,
 //     };
 //   }
 
-//   factory User.fromMap(Map<String, dynamic> map) {
-//     return User(
-//       ok: map['ok'] as int,
-//       data: map['data'] as int,
+//   factory UserModel.fromMap(Map<String, dynamic> map) {
+//     return UserModel(
+//       id: map['id'] as int,
+//       token: map['token'] as String,
 //     );
 //   }
 
-// //   String toJson() => json.encode(toMap());
+//   String toJson() => json.encode(toMap());
 
-// //   factory User.fromJson(String source) =>
-// //       User.fromMap(json.decode(source) as Map<String, dynamic>);
+//   factory UserModel.fromJson(String source) =>
+//       UserModel.fromMap(json.decode(source) as Map<String, dynamic>);
 
-// //   @override
-// //   String toString() => 'User(ok: $ok, data: $data)';
+//   @override
+//   String toString() => 'UserModel(id: $id, token: $token)';
 
-// //   @override
-// //   bool operator ==(covariant User other) {
-// //     if (identical(this, other)) return true;
+//   @override
+//   bool operator ==(covariant UserModel other) {
+//     if (identical(this, other)) return true;
 
-// //     return other.ok == ok && other.data == data;
-// //   }
+//     return other.id == id && other.token == token;
+//   }
 
-// //   @override
-// //   int get hashCode => ok.hashCode ^ data.hashCode;
-// // }
+//   @override
+//   int get hashCode => id.hashCode ^ token.hashCode;
+// }

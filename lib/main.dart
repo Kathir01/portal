@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:portal/pages/pages.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:portal/pages/pages.dart';
 // void main() {
 //   runApp(const MyApp());
 // }
@@ -35,7 +36,9 @@ void main() async {
   //   //   }
   //   // }
   // );
-  runApp(MyApp());
+  runApp(ProviderScope(
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

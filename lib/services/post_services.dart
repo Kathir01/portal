@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:developer' as developer;
 
 Future createAlbum(String companyid, String email, String password) async {
   final response = await http.post(
@@ -15,12 +14,8 @@ Future createAlbum(String companyid, String email, String password) async {
       "password": password,
     }),
   );
-  // print(response);
-  // print(response.statusCode);
   if (response.statusCode == 200) {
-    //print(response.body);
     var map = json.decode(response.body);
-    //print(response.body);
     var data = map["data"];
     var rtoken = data["refreshToken"];
     var conId = data["contactId"];
@@ -31,7 +26,6 @@ Future createAlbum(String companyid, String email, String password) async {
     return ids;
   } else {
     return "false";
-    //throw Exception('Failed to create album.');
   }
 }
 
@@ -45,15 +39,25 @@ Future getToken(
       'Authorization': token,
     },
   );
-
+  print(response.request);
+  List<String> fileNumber = [];
+  String lastid;
   if (response.statusCode == 200) {
-    dynamic map = json.decode(response.body);
-    print(response.body);
-    dynamic token = map["data"];
-    print(token);
-
-    return token;
-    // return token;
+    dynamic responsedata = json.decode(response.body);
+    var data = responsedata["data"];
+    if (data.length == limit) {
+      lastid = data[limit - 1]["_id"];
+    } else {
+      lastid = "stop";
+    }
+    for (int i = 0; i < limit - 1; i++) {
+      if (data.length > i) {
+        fileNumber.add(data[i]['fileNumber']);
+      } else {
+        break;
+      }
+    }
+    return [fileNumber, lastid];
   } else {
     return false;
   }

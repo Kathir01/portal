@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:portal/pages/pages.dart';
-import 'package:portal/services/services.dart';
 
-class PostData extends StatefulWidget {
-  PostData({super.key, required this.iddata});
+class Shipments extends StatefulWidget {
+  Shipments({super.key, required this.iddata});
   List<String> iddata;
+
   @override
-  State<PostData> createState() => _PostDataState();
+  State<Shipments> createState() => _ShipmentsState();
 }
 
-class _PostDataState extends State<PostData> {
-  void _shipment() async {
-    setState(() {
-      //String fileNo =
-      getToken(widget.iddata[1], 20, "null", widget.iddata[0]);
-    });
-    Navigator.push(context, MaterialPageRoute(builder: (_) => DataFetch()));
+class _ShipmentsState extends State<Shipments> {
+  late Future filenumbers;
+
+  void _shipment() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => MyHomePage(
+                  iddata2: widget.iddata,
+                )));
   }
 
   @override

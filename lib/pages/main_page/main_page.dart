@@ -119,7 +119,7 @@ class _MainPageState extends State<MainPage> {
                       if (!currentFocus.hasPrimaryFocus) {
                         currentFocus.unfocus();
                       }
-                      String cpyname = cpyController.text;
+                      String cpyname = "jio";
                       _submit(cpyname);
                     },
                     child: Text(

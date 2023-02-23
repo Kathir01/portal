@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:portal/services/services.dart';
-import 'package:portal/pages/login_pgae/post_data.dart';
+import 'package:portal/pages/pages.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({
@@ -44,18 +44,21 @@ class _LoginPageState extends State<LoginPage> {
       widget.onSubmit(userEmailController.value.text);
       widget.onSubmit(userPasswordController.value.text);
       setState(() {
-        idandtokens = createAlbum(widget.cpyid, userEmailController.text,
+        idandtokens = createAlbum(
+            widget.cpyid,
+            // "test12345@gmail.com", "test@123"
+            userEmailController.text,
             userPasswordController.text);
       });
       var r = await idandtokens;
-      print(
-          "----------------------------------------------------------------------------");
-      print(r);
+      // print(
+      //     "----------------------------------------------------------------------------");
+      // print(r);
 
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (_) => PostData(
+              builder: (_) => Shipments(
                     iddata: r,
                   )));
     }
@@ -121,9 +124,9 @@ class _LoginPageState extends State<LoginPage> {
                               return 'This field is required';
                             }
 
-                            if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                              return "Please enter a valid email address";
-                            }
+                            // if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                            //   return "Please enter a valid email address";
+                            // }
 
                             return null;
                           },
@@ -160,13 +163,13 @@ class _LoginPageState extends State<LoginPage> {
                               if (value!.isEmpty) {
                                 return 'Please enter password';
                               } else {
-                                if (!RegExp(
-                                        r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                                    .hasMatch(value)) {
-                                  return 'Enter valid password';
-                                } else {
-                                  return null;
-                                }
+                                // if (!RegExp(
+                                //         r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                                //     .hasMatch(value)) {
+                                //   return 'Enter valid password';
+                                // } else {
+                                //   return null;
+                                // }
                               }
                             }),
                       ),
