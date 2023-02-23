@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:portal/services/post_services.dart';
+import 'package:portal/services/services.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({

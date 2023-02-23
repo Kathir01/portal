@@ -5,7 +5,6 @@ Future<String> getRequest(cpy) async {
   String url = "https://api.cargoez.dev/iamserver/api/v1/companies/jio/url";
   final response = await http.get(Uri.parse(url));
   if (response.statusCode == 200) {
-    // var responseData = json.decode(response.body);
     Map<String, dynamic> map = json.decode(response.body);
     Map<String, dynamic> data1 = map["data"];
     List<dynamic> data2 = data1["company"];
