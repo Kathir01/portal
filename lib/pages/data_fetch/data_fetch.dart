@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:portal/models/models.dart';
 import 'package:portal/services/services.dart';
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({
-    super.key,
-    //required this.filenum,
+    Key? key,
     required this.iddata2,
-    //required this.lastid
-  });
-  // List filenum;
+  }) : super(key: key);
+
   List<String> iddata2;
-  // List lastid;
+
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
@@ -21,13 +20,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final ScrollController _scrollController = ScrollController();
   bool isLoading = false;
   final dio = Dio();
-  List<String> filenumbers = [];
+  List<ShipmentList> shipmentdata = [];
   String lastid = "null";
   int limit = 6;
   bool loadmore = true;
   bool endCmt = true;
 
-  void _getMoreData(templastid) async {
+  Future<void> _getMoreData(String templastid) async {
     if (!isLoading) {
       setState(() {
         isLoading = true;
@@ -36,29 +35,31 @@ class _MyHomePageState extends State<MyHomePage> {
         load =
             getToken(widget.iddata2[1], limit, templastid, widget.iddata2[0]);
       });
-      List finalload = await load;
-      List onlyfilenum = finalload[0];
-      String nextlastid = finalload[1];
+      List<ShipmentList> finalload = await load;
+      print(finalload);
+      shipmentdata.addAll(finalload.take(finalload.length - 1));
+      if (finalload.length < limit) {
+        shipmentdata.addAll(finalload);
+        loadmore = false;
+      }
       setState(() {
-        for (int i = 0; i < onlyfilenum.length; i++) {
-          filenumbers.add(onlyfilenum[i]);
-        }
-        lastid = nextlastid;
+        lastid = finalload.last.id;
+        print(lastid);
         isLoading = false;
       });
     }
   }
 
   @override
-  initState() {
+  void initState() {
     super.initState();
     _getMoreData(lastid);
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        if (lastid != "stop") {
+        if (loadmore == true) {
           _getMoreData(lastid);
-        } else if (lastid == "stop") {
+        } else if (loadmore == false) {
           setState(() {
             endCmt = false;
           });
@@ -78,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
       padding: EdgeInsets.all(8.0),
       child: Center(
         child: Opacity(
-          opacity: isLoading ? 1.0 : 00,
+          opacity: isLoading ? 1.0 : 0.0,
           child: const CircularProgressIndicator(),
         ),
       ),
@@ -92,10 +93,10 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text("Shipments"),
       ),
       body: ListView.builder(
-        itemCount: filenumbers.length + 1,
+        itemCount: shipmentdata.length + 1,
         itemExtent: 130,
         itemBuilder: (BuildContext context, int index) {
-          if (index == filenumbers.length) {
+          if (index == shipmentdata.length) {
             if (!endCmt) {
               return Center(
                 child: Text("No data"),
@@ -108,10 +109,11 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(8.0),
               child: ListTile(
                 leading: Icon(Icons.local_shipping_sharp),
-                title: Text((filenumbers[index])),
+                title: Text(shipmentdata[index].fileNumber),
                 onTap: () {
-                  print(filenumbers[index]);
+                  print(shipmentdata[index].fileNumber);
                 },
+                trailing: Text(shipmentdata[index].status),
               ),
             );
           }
