@@ -25,26 +25,33 @@ class _MyHomePageState extends State<MyHomePage> {
   int limit = 6;
   bool loadmore = true;
   bool endCmt = true;
+  String filter = "null";
 
-  Future<void> _getMoreData(String templastid) async {
+  Future<void> _getMoreData(String templastid, String filter) async {
     if (!isLoading) {
       setState(() {
         isLoading = true;
+        endCmt = true;
       });
       setState(() {
-        load =
-            getToken(widget.iddata2[1], limit, templastid, widget.iddata2[0]);
+        load = getToken(
+            widget.iddata2[1], limit, templastid, widget.iddata2[0], filter);
       });
       List<ShipmentList> finalload = await load;
-      print(finalload);
-      shipmentdata.addAll(finalload.take(finalload.length - 1));
+      shipmentdata.addAll(finalload);
+      //finalload.take(finalload.length - 1));
       if (finalload.length < limit) {
         shipmentdata.addAll(finalload);
         loadmore = false;
+      } else {
+        loadmore = true;
       }
       setState(() {
-        lastid = finalload.last.id;
-        print(lastid);
+        if (finalload.isNotEmpty) {
+          lastid = finalload.last.id;
+        } else if (finalload.isEmpty) {
+          endCmt = false;
+        }
         isLoading = false;
       });
     }
@@ -53,12 +60,12 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _getMoreData(lastid);
+    _getMoreData(lastid, filter);
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
         if (loadmore == true) {
-          _getMoreData(lastid);
+          _getMoreData(lastid, filter);
         } else if (loadmore == false) {
           setState(() {
             endCmt = false;
@@ -91,6 +98,62 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Shipments"),
+        actions: [
+          PopupMenuButton(
+              icon: Icon(Icons.filter_list_rounded),
+              itemBuilder: (BuildContext context) => [
+                    PopupMenuItem(
+                      value: 'Active',
+                      child: const Text('Active'),
+                      onTap: () {
+                        shipmentdata.clear();
+                        lastid = "null";
+                        filter = "Active";
+                        _getMoreData(lastid, filter);
+                      },
+                    ),
+                    PopupMenuItem(
+                      value: 'New',
+                      child: Text('New'),
+                      onTap: () {
+                        shipmentdata.clear();
+                        lastid = "null";
+                        filter = "New";
+                        _getMoreData(lastid, filter);
+                      },
+                    ),
+                    PopupMenuItem(
+                      value: 'Suspend',
+                      child: Text('Suspend'),
+                      onTap: () {
+                        shipmentdata.clear();
+                        lastid = "null";
+                        filter = "Suspend";
+                        _getMoreData(lastid, filter);
+                      },
+                    ),
+                    PopupMenuItem(
+                      value: 'Cancel',
+                      child: Text('Cancel'),
+                      onTap: () {
+                        shipmentdata.clear();
+                        lastid = "null";
+                        filter = "Cancel";
+                        _getMoreData(lastid, filter);
+                      },
+                    ),
+                    PopupMenuItem(
+                      value: 'Completed',
+                      child: Text('Completed'),
+                      onTap: () {
+                        shipmentdata.clear();
+                        lastid = "null";
+                        filter = "Completed";
+                        _getMoreData(lastid, filter);
+                      },
+                    ),
+                  ])
+        ],
       ),
       body: ListView.builder(
         itemCount: shipmentdata.length + 1,
@@ -98,7 +161,7 @@ class _MyHomePageState extends State<MyHomePage> {
         itemBuilder: (BuildContext context, int index) {
           if (index == shipmentdata.length) {
             if (!endCmt) {
-              return Center(
+              return const Center(
                 child: Text("No data"),
               );
             } else {
@@ -108,7 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: ListTile(
-                leading: Icon(Icons.local_shipping_sharp),
+                leading: Icon(Icons.local_shipping),
                 title: Text(shipmentdata[index].fileNumber),
                 onTap: () {
                   print(shipmentdata[index].fileNumber);
@@ -120,7 +183,6 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         controller: _scrollController,
       ),
-      //resizeToAvoidBottomInset: false,
     );
   }
 }

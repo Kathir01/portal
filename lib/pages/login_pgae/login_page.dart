@@ -6,12 +6,9 @@ class LoginPage extends StatefulWidget {
   const LoginPage({
     required this.onSubmit,
     required this.cpyid,
-    //required this.cpy1,
   });
   final ValueChanged<String> onSubmit;
   final String cpyid;
-  //final String cpy1;
-
   @override
   State<LoginPage> createState() => _LoginPageState();
 }
@@ -21,7 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final userPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   late Future idandtokens;
-
+  bool isTextFieldEnabled = true;
   @override
   void dispose() {
     userEmailController.dispose();
@@ -50,9 +47,6 @@ class _LoginPageState extends State<LoginPage> {
         // userPasswordController.text);
       });
       var r = await idandtokens;
-      // print(
-      //     "----------------------------------------------------------------------------");
-      // print(r);
 
       Navigator.push(
           context,
