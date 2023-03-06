@@ -5,6 +5,8 @@ import 'package:portal/models/models.dart';
 
 Future<List<ShipmentList>> getToken(String contactId, int limit, String lastId,
     String token, String chosenValue) async {
+  print("***************in the method ******************");
+  print(lastId);
   String filterString;
   if (chosenValue != "null") {
     final data = {
@@ -30,7 +32,9 @@ Future<List<ShipmentList>> getToken(String contactId, int limit, String lastId,
 
   if (response.statusCode == 200) {
     dynamic responseData = json.decode(response.body);
+    print(responseData);
     var data = responseData["data"];
+    print(data);
 
     List<ShipmentList> shipList = [];
     for (int i = 0; i < limit; i++) {

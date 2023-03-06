@@ -1,5 +1,14 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:portal/main.dart';
 import 'package:portal/pages/pages.dart';
+
+import '../../services/services.dart';
 
 class Shipments extends StatefulWidget {
   Shipments({super.key, required this.iddata});
@@ -11,6 +20,7 @@ class Shipments extends StatefulWidget {
 
 class _ShipmentsState extends State<Shipments> {
   late Future filenumbers;
+  String? filePath;
 
   void _shipment() {
     Navigator.push(
@@ -25,38 +35,26 @@ class _ShipmentsState extends State<Shipments> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          onPressed: _shipment,
-          child: Text("Shipments"),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: _shipment,
+              child: Text("Shipments"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                await downloadFile();
+                final directory = await getApplicationDocumentsDirectory();
+                setState(() {
+                  filePath = '${directory.path}/file_name.ext';
+                });
+              },
+              child: Text("Download"),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
-// Future<void> _showProgressNotification() async {
-//   const int maxProgress = 5;
-//   for (int i = 0; i <= maxProgress; i++) {
-//     await Future<void>.delayed(const Duration(seconds: 1), () async {
-//       final AndroidNotificationDetails androidPlatformChannelSpecifics =
-//           AndroidNotificationDetails(
-//               'progress channel', 'progress channel description',
-//               channelShowBadge: false,
-//               importance: Importance.max,
-//               priority: Priority.high,
-//               onlyAlertOnce: true,
-//               showProgress: true,
-//               maxProgress: maxProgress,
-//               progress: i);
-//       final NotificationDetails platformChannelSpecifics =
-//           NotificationDetails(android: androidPlatformChannelSpecifics);
-
-//       await flutterLocalNotificationsPlugin.show(
-//           0,
-//           'progress notification title',
-//           'progress notification body',
-//           platformChannelSpecifics,
-//           payload: 'item x');
-//     });
-//   }
-// }

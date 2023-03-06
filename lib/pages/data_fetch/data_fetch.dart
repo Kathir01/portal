@@ -1,6 +1,8 @@
+import 'package:draggable_scrollbar/draggable_scrollbar.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:portal/models/models.dart';
+import 'package:portal/pages/pages.dart';
 import 'package:portal/services/services.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -9,7 +11,7 @@ class MyHomePage extends StatefulWidget {
     required this.iddata2,
   }) : super(key: key);
 
-  List<String> iddata2;
+  final List<String> iddata2;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -18,11 +20,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late Future load;
   final ScrollController _scrollController = ScrollController();
+  //final ScrollController bar = ScrollController();
   bool isLoading = false;
   final dio = Dio();
   List<ShipmentList> shipmentdata = [];
   String lastid = "null";
-  int limit = 6;
+  int limit = 8;
   bool loadmore = true;
   bool endCmt = true;
   String filter = "null";
@@ -38,14 +41,6 @@ class _MyHomePageState extends State<MyHomePage> {
             widget.iddata2[1], limit, templastid, widget.iddata2[0], filter);
       });
       List<ShipmentList> finalload = await load;
-      shipmentdata.addAll(finalload);
-      //finalload.take(finalload.length - 1));
-      if (finalload.length < limit) {
-        shipmentdata.addAll(finalload);
-        loadmore = false;
-      } else {
-        loadmore = true;
-      }
       setState(() {
         if (finalload.isNotEmpty) {
           lastid = finalload.last.id;
@@ -54,6 +49,14 @@ class _MyHomePageState extends State<MyHomePage> {
         }
         isLoading = false;
       });
+      shipmentdata.addAll(finalload);
+      //finalload.take(finalload.length - 1));
+      if (finalload.length < limit) {
+        shipmentdata.addAll(finalload);
+        loadmore = false;
+      } else {
+        loadmore = true;
+      }
     }
   }
 
@@ -95,93 +98,85 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Shipments"),
-        actions: [
-          PopupMenuButton(
+    return RefreshIndicator(
+      onRefresh: () {
+        shipmentdata.clear();
+        return _getMoreData("null", filter);
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text("Shipments"),
+          actions: [
+            PopupMenuButton(
               icon: Icon(Icons.filter_list_rounded),
               itemBuilder: (BuildContext context) => [
-                    PopupMenuItem(
-                      value: 'Active',
-                      child: const Text('Active'),
-                      onTap: () {
-                        shipmentdata.clear();
-                        lastid = "null";
-                        filter = "Active";
-                        _getMoreData(lastid, filter);
-                      },
-                    ),
-                    PopupMenuItem(
-                      value: 'New',
-                      child: Text('New'),
-                      onTap: () {
-                        shipmentdata.clear();
-                        lastid = "null";
-                        filter = "New";
-                        _getMoreData(lastid, filter);
-                      },
-                    ),
-                    PopupMenuItem(
-                      value: 'Suspend',
-                      child: Text('Suspend'),
-                      onTap: () {
-                        shipmentdata.clear();
-                        lastid = "null";
-                        filter = "Suspend";
-                        _getMoreData(lastid, filter);
-                      },
-                    ),
-                    PopupMenuItem(
-                      value: 'Cancel',
-                      child: Text('Cancel'),
-                      onTap: () {
-                        shipmentdata.clear();
-                        lastid = "null";
-                        filter = "Cancel";
-                        _getMoreData(lastid, filter);
-                      },
-                    ),
-                    PopupMenuItem(
-                      value: 'Completed',
-                      child: Text('Completed'),
-                      onTap: () {
-                        shipmentdata.clear();
-                        lastid = "null";
-                        filter = "Completed";
-                        _getMoreData(lastid, filter);
-                      },
-                    ),
-                  ])
-        ],
-      ),
-      body: ListView.builder(
-        itemCount: shipmentdata.length + 1,
-        itemExtent: 130,
-        itemBuilder: (BuildContext context, int index) {
-          if (index == shipmentdata.length) {
-            if (!endCmt) {
-              return const Center(
-                child: Text("No data"),
-              );
-            } else {
-              return _buildProgressIndicator();
-            }
-          } else {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                leading: Icon(Icons.local_shipping),
-                title: Text(shipmentdata[index].fileNumber),
-                onTap: () {
-                  print(shipmentdata[index].fileNumber);
-                },
-                trailing: Text(shipmentdata[index].status),
-              ),
-            );
-          }
-        },
-        controller: _scrollController,
+                PopupMenuItem(
+                  value: 'Active',
+                  child: Text('Active'),
+                ),
+                PopupMenuItem(
+                  value: 'New',
+                  child: Text('New'),
+                ),
+                PopupMenuItem(
+                  value: 'Suspend',
+                  child: Text('Suspend'),
+                ),
+                PopupMenuItem(
+                  value: 'Cancel',
+                  child: Text('Cancel'),
+                ),
+                PopupMenuItem(
+                  value: 'Completed',
+                  child: Text('Completed'),
+                ),
+              ],
+              onSelected: (value) {
+                shipmentdata.clear();
+                lastid = "null";
+                filter = value;
+                _getMoreData(lastid, filter);
+              },
+            )
+          ],
+        ),
+        body: DraggableScrollbar.arrows(
+          alwaysVisibleScrollThumb: true,
+          labelTextBuilder: (double offset) => Text("${offset ~/ 100}"),
+          controller: _scrollController,
+          backgroundColor: Colors.grey,
+          //thickness: 30,
+          child: ListView.builder(
+            controller: _scrollController,
+            itemCount: shipmentdata.length + 1,
+            itemExtent: 130,
+            itemBuilder: (BuildContext context, int index) {
+              if (index == shipmentdata.length) {
+                if (!endCmt) {
+                  return const Center(
+                    child: Text("No data"),
+                  );
+                } else {
+                  return _buildProgressIndicator();
+                }
+              } else {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: ListTile(
+                    leading: Icon(Icons.local_shipping),
+                    title: Text(shipmentdata[index].fileNumber),
+                    onTap: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => DownloaderPage()));
+                    },
+                    trailing: Text(shipmentdata[index].status),
+                  ),
+                );
+              }
+            },
+            // controller: _scrollController,
+          ),
+        ),
       ),
     );
   }

@@ -1,44 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:open_file/open_file.dart';
 
 import 'package:portal/pages/pages.dart';
-// void main() {
-//   runApp(const MyApp());
-// }
 
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp(
-//       home: SplashPage(),
-//     );
-//   }
-// }
-
-final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // const AndroidInitializationSettings initializationSettingsAndroid =
-  //     AndroidInitializationSettings('@mipmap/ic_launcher');
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  final InitializationSettings initializationSettings =
+      InitializationSettings(android: initializationSettingsAndroid);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (String? payload) async {
+    print("+++++++++++++++++onselect++++++++++++++++++++++");
+    if (payload != null) {
+      final result = await OpenFile.open(payload);
+      debugPrint('notification payload: $payload');
+    }
+  });
 
-  // final InitializationSettings initializationSettings =
-  //     InitializationSettings(android: initializationSettingsAndroid);
-
-  // await flutterLocalNotificationsPlugin.initialize(
-  //   initializationSettings,
-  //   // onSelectNotification: (String payload) async {
-  //   //   if (payload != null) {
-  //   //     debugPrint('notification payload: $payload');
-  //   //   }
-  //   // }
-  // );
-  runApp(ProviderScope(
-    child: MyApp(),
-  ));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -50,16 +35,16 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class ReceivedNotification {
-  ReceivedNotification({
-    required this.id,
-    required this.title,
-    required this.body,
-    required this.payload,
-  });
+// class ReceivedNotification {
+//   ReceivedNotification({
+//     required this.id,
+//     required this.title,
+//     required this.body,
+//     required this.payload,
+//   });
 
-  final int id;
-  final String title;
-  final String body;
-  final String payload;
-}
+//   final int id;
+//   final String title;
+//   final String body;
+//   final String payload;
+// }

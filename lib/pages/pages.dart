@@ -3,3 +3,4 @@ export 'main_page/main_page.dart';
 export 'splash_page/splash_page.dart';
 export 'data_fetch/data_fetch.dart';
 export 'shipments/shipments.dart';
+export 'downloader_page/downloader_page.dart';
