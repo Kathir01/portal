@@ -11,7 +11,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final _formKey = GlobalKey<FormState>();
-  final cpyController = TextEditingController();
+  final cpyController = TextEditingController(text: "jio");
 
   void dispose() {
     cpyController.dispose();
@@ -119,7 +119,7 @@ class _MainPageState extends State<MainPage> {
                       if (!currentFocus.hasPrimaryFocus) {
                         currentFocus.unfocus();
                       }
-                      String cpyname = "jio";
+                      String cpyname = cpyController.text;
                       _submit(cpyname);
                     },
                     child: Text(

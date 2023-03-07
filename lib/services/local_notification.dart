@@ -4,18 +4,24 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:portal/main.dart';
 
 Future<void> downloadFile() async {
-  String url =
-      "https://commons.wikimedia.org/wiki/File:Sunflower_from_Silesia2.jpg";
-  Directory directory = await getApplicationDocumentsDirectory();
-  String filePath = '${directory.path}/file_name.ext';
-  final request = await HttpClient().getUrl(Uri.parse(url));
-  final response = await request.close();
-  var bytes = await consolidateHttpClientResponseBytes(response);
-  await File(filePath).writeAsBytes(bytes);
-  await _showProgressNotification(filePath);
+  final status = await Permission.storage.request();
+  if (status.isGranted) {
+    String url =
+        "https://commons.wikimedia.org/wiki/File:Sunflower_from_Silesia2.jpg";
+    Directory directory = await getApplicationDocumentsDirectory();
+    String filePath = '${directory.path}/file_name.jpg';
+    final request = await HttpClient().getUrl(Uri.parse(url));
+    final response = await request.close();
+    var bytes = await consolidateHttpClientResponseBytes(response);
+    await File(filePath).writeAsBytes(bytes);
+    await _showProgressNotification(filePath);
+  } else {
+    print("Permission Denied");
+  }
 }
 
 Future<dynamic> _showProgressNotification(String filePath) async {
@@ -69,7 +75,5 @@ Future<dynamic> _showProgressNotification(String filePath) async {
 }
 
 Future<void> openDownloadedFile(String filePath) async {
-  final result = await OpenFile.open(filePath);
-  print("********************");
-  print(result);
+  await OpenFile.open(filePath);
 }

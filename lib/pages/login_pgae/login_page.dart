@@ -14,8 +14,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final userEmailController = TextEditingController();
-  final userPasswordController = TextEditingController();
+  final userEmailController =
+      TextEditingController(text: "test12345@gmail.com");
+  final userPasswordController = TextEditingController(text: "test@123");
   final _formKey = GlobalKey<FormState>();
   late Future idandtokens;
   bool isTextFieldEnabled = true;
@@ -41,10 +42,8 @@ class _LoginPageState extends State<LoginPage> {
       widget.onSubmit(userEmailController.value.text);
       widget.onSubmit(userPasswordController.value.text);
       setState(() {
-        idandtokens =
-            createAlbum(widget.cpyid, "test12345@gmail.com", "test@123");
-        // userEmailController.text,
-        // userPasswordController.text);
+        idandtokens = createAlbum(widget.cpyid, userEmailController.text,
+            userPasswordController.text);
       });
       var r = await idandtokens;
 
@@ -117,9 +116,9 @@ class _LoginPageState extends State<LoginPage> {
                               return 'This field is required';
                             }
 
-                            // if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
-                            //   return "Please enter a valid email address";
-                            // }
+                            if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                              return "Please enter a valid email address";
+                            }
 
                             return null;
                           },
@@ -156,13 +155,13 @@ class _LoginPageState extends State<LoginPage> {
                               if (value!.isEmpty) {
                                 return 'Please enter password';
                               } else {
-                                // if (!RegExp(
-                                //         r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
-                                //     .hasMatch(value)) {
-                                //   return 'Enter valid password';
-                                // } else {
-                                //   return null;
-                                // }
+                                if (!RegExp(
+                                        r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$')
+                                    .hasMatch(value)) {
+                                  return 'Enter valid password';
+                                } else {
+                                  return null;
+                                }
                               }
                             }),
                       ),

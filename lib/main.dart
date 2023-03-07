@@ -16,10 +16,8 @@ void main() async {
       InitializationSettings(android: initializationSettingsAndroid);
   await flutterLocalNotificationsPlugin.initialize(initializationSettings,
       onSelectNotification: (String? payload) async {
-    print("+++++++++++++++++onselect++++++++++++++++++++++");
     if (payload != null) {
-      final result = await OpenFile.open(payload);
-      debugPrint('notification payload: $payload');
+      await OpenFile.open(payload);
     }
   });
 
